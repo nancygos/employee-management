@@ -52,7 +52,7 @@ module Pay
       if sorted.length.odd?
         sorted[midpoint]
       else
-        (sorted[midpoint - 1] + sorted[midpoint]) / 2.0
+        (sorted[midpoint - 1] + sorted[midpoint]) / 2
       end
     end
   end
