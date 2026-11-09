@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     get "overview", to: "overview#show"
-    resources :employees, only: [:index]
+    resources :employees, only: [:index, :show] do
+      resources :salaries, only: [:create]
+    end
   end
 end

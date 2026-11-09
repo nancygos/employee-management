@@ -30,4 +30,33 @@ class Api::EmployeesController < ApplicationController
     render json: {data: data, meta: meta}
   end
 
+  def show
+    employee = Employee.find_by(employee_code: params[:id])
+    return render json: {error: "Employee not found"}, status: :not_found if employee.nil?
+
+    current_salary = Salary.current_as_of.find_by(employee_id: employee.id)
+    
+    render json: {data: {
+      employee_code: employee.employee_code,
+      first_name: employee.first_name,
+      last_name: employee.last_name,
+      email: employee.email,
+      country_code: employee.country_code,
+      department: employee.department,
+      job_title: employee.job_title,
+      hired_on: employee.hired_on,
+      salary: {
+        annual_amount_minor: current_salary.annual_amount_minor,
+        currency: current_salary.currency,
+        usd_annual_amount_minor: Pay::Rates.to_usd(current_salary.annual_amount_minor, current_salary.currency)
+      }
+    }}
+  end
+
+  def salaries
+    employee = Employee.find_by(employee_code: params[:employee_id])
+    return render json: {error: "Employee not found"}, status: :not_found if employee.nil?
+    salaries = employee.salaries.all
+    render json: {data: salaries}, status: :ok
+  end
 end

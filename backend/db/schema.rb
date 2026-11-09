@@ -31,7 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_07_091238) do
     t.integer "employee_id", null: false
     t.date "effective_on", null: false
     t.string "currency", null: false
-    t.integer "annual_amount_minor", null: false
+    t.integer "annual_amount_minor", null: false       # minor means the smallest unit of that currency
     t.string "reason", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

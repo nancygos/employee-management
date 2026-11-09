@@ -52,4 +52,52 @@ RSpec.describe "Employees API", type: :request do
       }
     })
   end
+
+  it "fine an employee by employee code" do
+    match = create_employee("US345")
+    match.salaries.create!(
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 100_000,
+      reason: "hire"
+    )
+    other = create_employee("US346")
+    other.salaries.create!(
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 100_000,
+      reason: "hire"
+    )
+
+    get "/api/employees/US345"
+    expect(response).to have_http_status(:ok)
+    body = JSON.parse(response.body)
+    expect(body["data"]["employee_code"]).to eq("US345")
+  end
+
+  it "apped new salary and keep history of previous salaries" do
+    employee = create_employee("US345")
+    employee.salaries.create!(
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 100_000,
+      reason: "hire"
+    )
+
+    post "/api/employees/US345/salaries", params: {
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 150_000,
+      reason: "merit"
+    }
+
+    expect(response).to have_http_status(:created)
+    body = JSON.parse(response.body)
+
+    expect(employee.salaries.count).to eq(2)
+    current_salary = Salary.current_as_of.find_by(employee_id: employee.id)
+    expect(current_salary.annual_amount_minor).to eq(150_000)
+    expect(current_salary.reason).to eq("merit")
+    puts employee.salaries.inspect
+  end
 end
