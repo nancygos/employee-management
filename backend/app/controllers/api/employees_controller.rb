@@ -2,6 +2,11 @@ class Api::EmployeesController < ApplicationController
   def index
     per_page = params[:per_page] || 25
     total_employees = Employee.where(status: "active")
+
+    if params[:q].present?
+      total_employees = total_employees.where("employee_code LIKE :term OR first_name LIKE :term OR last_name LIKE :term OR email LIKE :term", term: "%#{params[:q]}%")
+    end
+
     employees = total_employees.limit(per_page)
 
     current_salary = Salary.current_as_of.where(employee_id: employees.map(&:id)).index_by(&:employee_id)

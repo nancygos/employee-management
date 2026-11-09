@@ -98,6 +98,27 @@ RSpec.describe "Employees API", type: :request do
     current_salary = Salary.current_as_of.find_by(employee_id: employee.id)
     expect(current_salary.annual_amount_minor).to eq(150_000)
     expect(current_salary.reason).to eq("merit")
-    puts employee.salaries.inspect
+  end
+
+  it "filter empolyees by code, name, or email" do
+    match = create_employee("US345")
+    match.salaries.create!(
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 100_000,
+      reason: "hire"
+    )
+    other = create_employee("US346")
+    other.salaries.create!(
+      effective_on: Date.new(2020, 1, 1),
+      currency: "USD",
+      annual_amount_minor: 100_000,
+      reason: "hire"
+    )
+
+    get "/api/employees", params: { q: "us345@example.com" }
+    expect(response).to have_http_status(:ok)
+    body = JSON.parse(response.body)
+    expect(body["data"].map { |e| e["employee_code"] }).to eq(["US345"])
   end
 end
