@@ -1,14 +1,17 @@
 class Api::EmployeesController < ApplicationController
   def index
-    per_page = params[:per_page] || 25
-    total_employees = Employee.where(status: "active")
+    pages = (params[:page] || 1).to_i
+    per_page = (params[:per_page] || 25).to_i
+    total_employees = Employee.where(status: params[:status] || "active")
 
     if params[:q].present?
       total_employees = total_employees.where("employee_code LIKE :term OR first_name LIKE :term OR last_name LIKE :term OR email LIKE :term", term: "%#{params[:q]}%")
     end
 
-    employees = total_employees.limit(per_page)
-
+    total_employees = total_employees.where(country_code: params[:country_code]) if params[:country_code].present?
+    total_employees = total_employees.where(department: params[:department]) if params[:department].present?
+    total_employees = total_employees.where(job_title: params[:job_title]) if params[:job_title].present?
+    employees = total_employees.order(created_at: :asc).offset((pages - 1) * per_page).limit(per_page)
     current_salary = Salary.current_as_of.where(employee_id: employees.map(&:id)).index_by(&:employee_id)
 
     data = employees.map do |e|
@@ -30,7 +33,7 @@ class Api::EmployeesController < ApplicationController
         }
       )
     end
-    meta = {page: 1, per_page: per_page, total: total_employees.count}
+    meta = {page: pages, per_page: per_page, total: total_employees.count}
 
     render json: {data: data, meta: meta}
   end
@@ -39,7 +42,7 @@ class Api::EmployeesController < ApplicationController
     employee = Employee.find_by(employee_code: params[:id])
     return render json: {error: "Employee not found"}, status: :not_found if employee.nil?
 
-    current_salary = Salary.current_as_of.find_by(employee_id: employee.id)
+    salaries = employee.salaries.order(effective_on: :desc, id: :desc)
     
     render json: {data: {
       employee_code: employee.employee_code,
@@ -50,18 +53,15 @@ class Api::EmployeesController < ApplicationController
       department: employee.department,
       job_title: employee.job_title,
       hired_on: employee.hired_on,
-      salary: {
-        annual_amount_minor: current_salary.annual_amount_minor,
-        currency: current_salary.currency,
-        usd_annual_amount_minor: Pay::Rates.to_usd(current_salary.annual_amount_minor, current_salary.currency)
+      salaries: salaries.map { |s|
+        {
+          annual_amount_minor: s.annual_amount_minor,
+          currency: s.currency,
+          reason: s.reason,
+          effective_on: s.effective_on
+        }
       }
     }}
   end
 
-  def salaries
-    employee = Employee.find_by(employee_code: params[:employee_id])
-    return render json: {error: "Employee not found"}, status: :not_found if employee.nil?
-    salaries = employee.salaries.all
-    render json: {data: salaries}, status: :ok
-  end
 end
