@@ -35,7 +35,7 @@ export default function Directory() {
             {
                 !result ? ( <p>Loading...</p> ) : (
                     <>
-                        <p>{result.meta.total} matches found</p>
+                        <p>{result.meta.total} employees found</p>
                         <ul>
                             {result.data.map((employee) => (
                                 <li key={employee.employee_code}>
@@ -46,8 +46,10 @@ export default function Directory() {
                             ))}
                         </ul>
 
-                        <button type="button" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</button>
-                        <button type="button" disabled={page * 25 >= result.meta.total} onClick={() => setPage(page + 1)}>Next</button>
+                        <div className="pager">
+                            <button type="button" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</button>
+                            <button type="button" disabled={page * 25 >= result.meta.total} onClick={() => setPage(page + 1)}>Next</button>
+                        </div>
                     </>
                 )
             }

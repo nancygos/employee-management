@@ -4,6 +4,8 @@ function usd(minor) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', }).format(minor / 100)
 }
 
+const countryName = new Intl.DisplayNames('en', { type: 'region' })
+
 export default function Overview() {
     const [overview, setOverview] = useState(null)
 
@@ -15,28 +17,28 @@ export default function Overview() {
 
     return (
         <main>
-            <h1>Overview</h1>
-            <p>{overview.headcount} employees</p>
-            <p> Annual payroll: {usd(overview.annual_payroll_usd_minor)}</p>
-            <p> Median salary: {usd(overview.median_salary_usd_minor)}</p>
+            <section className="stats">
+                <p><span>Employees</span> {overview.headcount} </p>
+                <p><span>Annual payroll</span> {usd(overview.annual_payroll_usd_minor)}</p>
+                <p><span>Median salary</span> {usd(overview.median_salary_usd_minor)}</p>
+            </section>
 
-            <h2>By country</h2>
+            <h2>Country</h2>
             <ul>
                 {overview.by_country.map(row => (
-                    <li key={row.key}>
-                        {row.key}: {row.headcount} employees, {usd(row.annual_payroll_usd_minor)} annual payroll
+                    <li key= {row.key}>
+                        <strong>{countryName.of(row.key)}</strong>: {row.headcount} employees, {usd(row.annual_payroll_usd_minor)} annual payroll
                     </li>
                 ))}
             </ul>
-            <h2>By department</h2>
+            <h2>Department</h2>
             <ul>
                 {overview.by_department.map(row => (
                     <li key={row.key}>
-                        {row.key}: {row.headcount} employees, {usd(row.annual_payroll_usd_minor)} annual payroll
+                        <strong>{row.key}</strong>: {row.headcount} employees, {usd(row.annual_payroll_usd_minor)} annual payroll
                     </li>
                 ))}
             </ul>
         </main>
-    )
-    
+    )   
 }

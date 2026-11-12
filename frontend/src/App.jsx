@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, NavLink, Routes, Route } from 'react-router-dom'
 import Directory from './Directory'
 import Overview from "./Overview"
 import EmployeePage from "./EmployeePage"
@@ -7,9 +7,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <nav>
-        <Link to="/">Overview</Link>
+        <h1><strong>Salary Records</strong></h1> <br />
+        <NavLink to="/">Overview</NavLink>
         <span> | </span>
-        <Link to="/employees">Employees</Link>
+        <NavLink to="/employees">Employees</NavLink>
       </nav>
 
       <Routes>

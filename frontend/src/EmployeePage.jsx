@@ -49,12 +49,20 @@ export default function EmployeePage() {
             </ul>
             <h2>Record a salary change</h2>
             <form onSubmit={onSubmit}>
-                <input type="date" value={form.effective_on} onChange={(event) => setForm({ ...form, effective_on: event.target.value })} />
-                <input value={form.currency} onChange={(event) => setForm({ ...form, currency: event.target.value })} />
-                <input value={form.annual_amount_minor} onChange={(event) => setForm({ ...form, annual_amount_minor: event.target.value })} placeholder="Amount in minor units" />
-                <input value={form.reason} onChange={(event) => setForm({ ...form, reason: event.target.value })} />
+                <label>Effective date
+                    <input type="date" value={form.effective_on} onChange={(event) => setForm({ ...form, effective_on: event.target.value })} />
+                </label>
+                <label>Currency
+                    <input value={form.currency} onChange={(event) => setForm({ ...form, currency: event.target.value })} />
+                </label>
+                <label>Amount in minor units
+                    <input value={form.annual_amount_minor} onChange={(event) => setForm({ ...form, annual_amount_minor: event.target.value })} />
+                </label>
+                <label>Reason
+                    <input value={form.reason} onChange={(event) => setForm({ ...form, reason: event.target.value })} />
+                </label>
                 <button type="submit">Save</button>
-            </form>
+             </form>
         </main>
     )
 }
