@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import {useParams} from 'react-router-dom'
+import { API_URL } from './api'
 
 function money(minor , currency = 'USD') {
     const major = currency === "JPY" ? minor : minor / 100
@@ -17,14 +18,14 @@ export default function EmployeePage() {
     })
 
     function load() {
-        fetch(`http://localhost:3000/api/employees/${employee_code}`).then(res => res.json()).then((body) => setEmployee(body.data))
+        fetch(`${API_URL}/api/employees/${employee_code}`).then(res => res.json()).then((body) => setEmployee(body.data))
     }
 
     useEffect(load, [employee_code])
 
     function onSubmit(e) {
         e.preventDefault()
-        fetch(`http://localhost:3000/api/employees/${employee_code}/salaries`, {
+        fetch(`${API_URL}/api/employees/${employee_code}/salaries`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(form),

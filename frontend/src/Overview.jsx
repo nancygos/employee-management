@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from './api'
 
 function usd(minor) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', }).format(minor / 100)
@@ -10,7 +11,7 @@ export default function Overview() {
     const [overview, setOverview] = useState(null)
 
     useEffect(()=> {
-        fetch('http://localhost:3000/api/overview').then(res => res.json()).then(setOverview)
+        fetch(`${API_URL}/api/overview`).then(res => res.json()).then(setOverview)
     }, [])
 
     if(!overview) return <p>Hold tight data is coming your way...</p>

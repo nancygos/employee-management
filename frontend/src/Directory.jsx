@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
+import { API_URL } from './api'
 
 function usd(minor) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', }).format(minor / 100)
@@ -15,7 +16,7 @@ export default function Directory() {
         const params = new URLSearchParams({ page, per_page: 25 })
         if (search) params.set("q", search)
 
-        fetch(`http://localhost:3000/api/employees?${params}`).then(res => res.json()).then(setResult)
+        fetch(`${API_URL}/api/employees?${params}`).then(res => res.json()).then(setResult)
     }, [search, page])
 
     function onSubmit(e) {
