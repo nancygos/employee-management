@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import {Link} from 'react-router-dom'
 
 function usd(minor) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', }).format(minor / 100)
@@ -37,9 +38,11 @@ export default function Directory() {
                         <p>{result.meta.total} matches found</p>
                         <ul>
                             {result.data.map((employee) => (
-                                <li key ={employee.employee_code}>
-                                    {employee.employee_code} {employee.first_name} {employee.last_name} — {employee.department}, {usd(employee.salary.usd_annual_amount_minor)}
-                                </li>
+                                <li key={employee.employee_code}>
+                                    <Link to={`/employees/${employee.employee_code}`}>{employee.employee_code}</Link>
+                                    {" "}
+                                    {employee.first_name} {employee.last_name} — {employee.department}, {usd(employee.salary.usd_annual_amount_minor)}
+                              </li>
                             ))}
                         </ul>
 

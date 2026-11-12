@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
 import Directory from './Directory'
 import Overview from "./Overview"
+import EmployeePage from "./EmployeePage"
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/employees" element={<Directory />} />
+        <Route path="/employees/:employee_code" element={<EmployeePage />} />
       </Routes>
     </BrowserRouter>
   )
