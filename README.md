@@ -1,30 +1,23 @@
-# Employee salary records
+# Employee Salary Records
 
-HR tool to look up 10,000 employees, record a salary change and read active headcount, annual payroll and median pay in USD.
+HR tool to look up 10,000 employees, record an append-only salary change, and read active headcount, annual payroll, and median pay in USD across countries and departments.
+
+**Live app:** https://employee-management-sigma-orpin.vercel.app/  
+**API:** https://employee-management-z90m.onrender.com/api/overview  
+*(Hosted on Render's free tier — the first request after inactivity may take ~30–40 seconds to wake the API)*
 
 ## Requirements
 
 - Ruby 3.3.7
 - Node.js 22
 
-## API
+## Local setup
 
-From backend/:
+### 1. API (`backend/`)
 
-bundle i
-rails db:prepare
-rails db:seed
-rails server
-
-The API listens on http://localhost:3000. 
-db:seed loads 10,000 employees. 
-Tests: rspec
-
-## Web app
-
-From frontend/, in a second terminal:
-
-npm install
-npm run dev
-
-Open http://localhost:5173. Both processes have to be running. The browser calls the API on port 3000
+```bash
+cd backend
+bundle install
+bin/rails db:prepare
+bin/rails db:seed
+bin/rails server
