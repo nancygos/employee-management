@@ -21,3 +21,20 @@ bundle install
 bin/rails db:prepare
 bin/rails db:seed
 bin/rails server
+```
+The API listens on http://localhost:3000. 
+db:seed deterministically loads 10,000 employees.
+Run tests from backend/:
+
+```
+bundle exec rspec
+```
+
+### 2. Web app (frontend/)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open http://localhost:5173. Both processes run side by side locally (VITE_API_URL defaults to http://localhost:3000).
